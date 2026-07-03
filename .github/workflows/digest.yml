@@ -2,7 +2,9 @@ name: Send Nightly Digest
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # 01:00 UTC = 9pm ET
+    # 01:10 UTC, offset 10min from scrape.yml's hourly :00 trigger so the
+    # two workflows don't race to commit data/seen_jobs.db at 01:00 UTC.
+    - cron: '10 1 * * *'   # 01:10 UTC = ~9:10pm ET
   workflow_dispatch:
 
 jobs:
@@ -35,4 +37,12 @@ jobs:
           git config user.name  "internship-bot"
           git config user.email "bot@noreply"
           git add data/seen_jobs.db
-          git diff --cached --quiet || (git commit -m "chore: clear digest queue [skip ci]" && git push)
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: clear digest queue [skip ci]"
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "::error::failed to push cleared queue after 5 attempts"
+          exit 1

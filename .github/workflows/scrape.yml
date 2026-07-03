@@ -35,4 +35,15 @@ jobs:
           git config user.name  "internship-bot"
           git config user.email "bot@noreply"
           git add data/seen_jobs.db
-          git diff --cached --quiet || (git commit -m "chore: update job state [skip ci]" && git push)
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: update job state [skip ci]"
+          # digest.yml also commits to data/seen_jobs.db and can run in the
+          # same minute (both fire at :00 once a day), so retry with a
+          # rebase instead of letting a losing push silently drop the commit.
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "::error::failed to push job state after 5 attempts"
+          exit 1
