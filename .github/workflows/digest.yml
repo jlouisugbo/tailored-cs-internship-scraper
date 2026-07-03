@@ -1,0 +1,38 @@
+name: Send Nightly Digest
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 01:00 UTC = 9pm ET
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send digest
+        run: python digest.py
+        env:
+          GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+
+      - name: Commit cleared queue
+        run: |
+          git config user.name  "internship-bot"
+          git config user.email "bot@noreply"
+          git add data/seen_jobs.db
+          git diff --cached --quiet || (git commit -m "chore: clear digest queue [skip ci]" && git push)

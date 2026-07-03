@@ -1,0 +1,94 @@
+keywords:
+  - intern
+  - internship
+  - co-op
+  - coop
+  - student developer
+  - apprentice
+  - scholar
+  - university hire
+  - placement
+
+notification:
+  discord_webhook_env: DISCORD_WEBHOOK_URL
+  email_to: you@example.com
+  email_from_env: GMAIL_ADDRESS
+  email_password_env: GMAIL_APP_PASSWORD
+  digest_hour_utc: 1
+  # Discord user ID to @mention when a job in discord_ping_categories comes in.
+  # Right-click your name in Discord (Developer Mode on) -> Copy User ID.
+  # Leave blank to disable pings entirely.
+  discord_ping_user_id: ""
+  # Which company categories should trigger a ping (in addition to the normal
+  # embed, which always posts regardless of this setting). Empty = never ping.
+  discord_ping_categories: [1]
+
+github_repos:
+  - repo: vanshb03/Summer2027-Internships
+    branch: dev
+    path: README.md
+    priority: primary
+  - repo: SimplifyJobs/Summer2027-Internships
+    branch: dev
+    path: README.md
+    priority: secondary
+
+companies:
+  # slug is tried on all three ATS APIs every run. 404 → [].
+  # slug_greenhouse / slug_lever / slug_ashby: override only where slug differs.
+
+  # ── Category 1 ──────────────────────────────────────────────────────────────
+  - { name: Mercury,      category: 1, slug: mercury }
+  - { name: Figma,        category: 1, slug: figma }
+  - { name: Vercel,       category: 1, slug: vercel }
+  - { name: Ramp,         category: 1, slug: ramp }
+  - { name: Notion,       category: 1, slug: notion }
+  - { name: Pendo,        category: 1, slug: pendo }
+  - { name: Duolingo,     category: 1, slug: duolingo }
+  - { name: Squarespace,  category: 1, slug: squarespace }
+  - { name: Discord,      category: 1, slug: discord }
+  - { name: Gusto,        category: 1, slug: gusto }
+  - { name: Vanta,        category: 1, slug: vanta }
+  - { name: Persona,      category: 1, slug: persona }
+  - { name: Asana,        category: 1, slug: asana }
+  - { name: Bandwidth,    category: 1, slug: bandwidth }
+  - { name: 1Password,    category: 1, slug: 1password }
+  - { name: Reddit,       category: 1, slug: reddit }
+  - { name: HubSpot,      category: 1, slug: hubspot }
+
+
+  # ── Category 2 ──────────────────────────────────────────────────────────────
+  - { name: Cloudflare,     category: 2, slug: cloudflare }
+  - { name: Datadog,        category: 2, slug: datadog }
+  - { name: MongoDB,        category: 2, slug: mongodb }
+  - { name: Riot Games,     category: 2, slug: riotgames }
+  - { name: Toast,          category: 2, slug: toast }
+  - { name: Dropbox,        category: 2, slug: dropbox }
+  - { name: Anthropic,      category: 2, slug: anthropic }
+  - { name: Carta,          category: 2, slug: carta }
+  - { name: Lattice,        category: 2, slug: lattice }
+  - { name: Benchling,      category: 2, slug: benchling }
+  - { name: PagerDuty,      category: 2, slug: pagerduty }
+  - { name: Cockroach Labs, category: 2, slug: cockroachlabs }
+
+  # ── Category 3 ──────────────────────────────────────────────────────────────
+  - { name: Stripe,      category: 3, slug: stripe }
+  - { name: Robinhood,   category: 3, slug: robinhood }
+  - { name: Affirm,      category: 3, slug: affirm }
+  - { name: DoorDash,    category: 3, slug: doordash }
+  - { name: TikTok,      category: 3, slug: tiktok }
+  - { name: Spotify,     category: 3, slug: spotify }
+  - { name: LinkedIn,    category: 3, slug: linkedin }
+  - { name: Slack,       category: 3, slug: slack }
+  - { name: Zoom,        category: 3, slug: zoom, slug_workday: { tenant: zoom, host: wd5, site: Zoom } }
+  - { name: Salesforce,  category: 3, slug: salesforce, slug_workday: { tenant: salesforce, host: wd12, site: External_Career_Site } }
+  - { name: Fidelity,    category: 3, slug: fidelity, slug_workday: { tenant: fmr, host: wd1, site: FidelityCareers } }
+  - { name: Capital One, category: 3, slug: capitalone, slug_workday: { tenant: capitalone, host: wd12, site: Capital_One } }
+  - { name: Coinbase,    category: 3, slug: coinbase }
+  - { name: Instacart,   category: 3, slug: instacart }
+  - { name: Block,       category: 3, slug: block, slug_greenhouse: block-inc }
+  - { name: Plaid,       category: 3, slug: plaid }
+  - { name: Brex,        category: 3, slug: brex }
+  - { name: Rippling,    category: 3, slug: rippling }
+  - { name: Ironclad,    category: 3, slug: ironclad }
+  - { name: Cohere,      category: 3, slug: cohere }
