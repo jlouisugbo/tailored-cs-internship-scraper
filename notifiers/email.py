@@ -1,5 +1,7 @@
+import html
 import logging
 import os
+import re
 import smtplib
 from collections import defaultdict
 from datetime import date
@@ -9,6 +11,15 @@ from email.mime.text import MIMEText
 from models import Job
 
 logger = logging.getLogger(__name__)
+
+_WHITESPACE_RE = re.compile(r"\s+")
+
+
+def _clean_location(location: str) -> str:
+    # ATS APIs (Workday especially) sometimes return multi-location postings
+    # as newline-separated text (e.g. "5 Locations\nSan Francisco, CA\n...").
+    # HTML collapses that to one glued-together string unless normalized first.
+    return _WHITESPACE_RE.sub(" ", location).strip()
 
 
 def render_html(jobs: list[Job]) -> str:
@@ -21,10 +32,10 @@ def render_html(jobs: list[Job]) -> str:
         label = f"Category {cat}" if cat > 0 else "GitHub Repo"
         rows = "".join(
             f"<tr>"
-            f"<td style='padding:6px 12px;'>{j.company}</td>"
-            f"<td style='padding:6px 12px;'>{j.title}</td>"
-            f"<td style='padding:6px 12px;'>{j.location}</td>"
-            f"<td style='padding:6px 12px;'><a href='{j.url}'>Apply</a></td>"
+            f"<td style='padding:6px 12px;'>{html.escape(j.company)}</td>"
+            f"<td style='padding:6px 12px;'>{html.escape(j.title)}</td>"
+            f"<td style='padding:6px 12px;'>{html.escape(_clean_location(j.location))}</td>"
+            f"<td style='padding:6px 12px;'><a href='{html.escape(j.url)}'>Apply</a></td>"
             f"</tr>"
             for j in by_category[cat]
         )

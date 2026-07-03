@@ -48,6 +48,36 @@ def test_render_empty_list_returns_valid_html_no_table_rows():
     assert "<tr>" not in html
 
 
+def test_render_escapes_untrusted_ats_fields():
+    job = Job(
+        company='A&B "Corp"',
+        title="<script>alert(1)</script> Intern",
+        url="https://example.com/1",
+        location="Remote",
+        source="greenhouse",
+        category=1,
+        discovered_at="2026-09-01T00:00:00+00:00",
+    )
+    html = render_html([job])
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
+    assert "A&amp;B" in html
+
+
+def test_render_collapses_multi_location_whitespace():
+    job = Job(
+        company="Salesforce",
+        title="SWE Intern",
+        url="https://example.com/1",
+        location="5 Locations\nSan Francisco, CA\nPalo Alto, CA",
+        source="workday",
+        category=1,
+        discovered_at="2026-09-01T00:00:00+00:00",
+    )
+    html = render_html([job])
+    assert "5 Locations San Francisco, CA Palo Alto, CA" in html
+
+
 def test_render_multiple_categories_all_appear():
     jobs = [
         make_job("A", category=1, url="https://example.com/1"),
